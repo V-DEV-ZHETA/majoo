@@ -2,7 +2,8 @@
 
 <p align="center">
 <a href="https://github.com/laravel/framework/actions"><img src="https://ik.imagekit.io/hdxn6kcob/1.png" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://ik.imagekit.io/hdxn6kcob/2.png" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://ik.imagekit.io/hdxn6kcob/3.png" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://ik.imagekit.io/hdxn6kcob/4.png" alt="License"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://ik.imagekit.io/hdxn6kcob/5.png" alt="License"></a>
 </p>
