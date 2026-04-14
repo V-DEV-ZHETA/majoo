@@ -11,7 +11,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        /* ── Base ─────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; }
 
         body {
@@ -20,14 +19,12 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ── Smooth page entrance ─────────────── */
         @keyframes pageIn {
             from { opacity: 0; transform: translateY(12px); }
             to   { opacity: 1; transform: translateY(0); }
         }
         main { animation: pageIn .45s ease-out both; }
 
-        /* ── Header shadow on scroll ──────────── */
         .site-header {
             transition: box-shadow .3s ease, background-color .3s ease;
         }
@@ -36,7 +33,6 @@
             background-color: rgba(255,255,255,.97);
         }
 
-        /* ── Nav links ────────────────────────── */
         .nav-link {
             position: relative;
             transition: color .2s ease, background-color .2s ease;
@@ -56,7 +52,6 @@
         }
         .nav-link.active { color: #111 !important; font-weight: 600; }
 
-        /* ── Cart badge bounce ────────────────── */
         @keyframes badgePop {
             0%   { transform: scale(.6); }
             60%  { transform: scale(1.15); }
@@ -64,7 +59,6 @@
         }
         .cart-badge { animation: badgePop .35s ease-out; }
 
-        /* ── Flash messages ───────────────────── */
         .flash {
             display: flex;
             align-items: center;
@@ -125,7 +119,6 @@
         }
         .flash-error .flash-icon svg { width: 13px; height: 13px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-        /* auto-dismiss progress bar */
         .flash .flash-progress {
             position: absolute;
             bottom: 0; left: 0;
@@ -141,7 +134,6 @@
             to   { width: 0%; }
         }
 
-        /* ── Footer subtle hover ──────────────── */
         .footer-link {
             transition: color .2s ease;
         }
@@ -149,14 +141,12 @@
             color: #111;
         }
 
-        /* ── Focus visible for accessibility ──── */
         a:focus-visible, button:focus-visible {
             outline: 2px solid #111;
             outline-offset: 2px;
             border-radius: 8px;
         }
 
-        /* ── Selection color ──────────────────── */
         ::selection {
             background: #111;
             color: #fff;
@@ -165,12 +155,10 @@
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-900">
 
-    <!-- ════════ HEADER ════════ -->
     <header class="site-header sticky top-0 z-40 border-b border-gray-100 bg-white/90 backdrop-blur-md">
         <div class="mx-auto max-w-6xl px-4 sm:px-6">
             <div class="flex h-16 items-center justify-between gap-4">
 
-                <!-- Logo -->
                 <a href="{{ route('shop.index') }}" class="flex items-center gap-2.5 group">
                     <span class="inline-flex items-center gap-2 rounded-xl px-2.5 py-2 transition hover:bg-gray-50">
                         <span class="text-[15px] font-extrabold tracking-tight text-gray-900">MAJOO</span>
@@ -179,13 +167,11 @@
                     </span>
                 </a>
 
-                <!-- Nav -->
                 <nav class="flex items-center gap-1">
                     <a
                         href="{{ route('shop.index') }}"
                         class="nav-link {{ request()->routeIs('shop.index') ? 'active' : '' }} rounded-xl px-3.5 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                     >
-                        Produk
                     </a>
                     <a
                         href="{{ route('shop.cart') }}"
@@ -205,9 +191,7 @@
         </div>
     </header>
 
-    <!-- ════════ MAIN ════════ -->
     <main class="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-        {{-- Flash: Success --}}
         @if (session('success'))
             <div class="flash flash-success mb-6" data-auto-dismiss>
                 <span class="flash-icon">
@@ -221,7 +205,6 @@
             </div>
         @endif
 
-        {{-- Flash: Error --}}
         @if (session('error'))
             <div class="flash flash-error mb-6" data-auto-dismiss>
                 <span class="flash-icon">
@@ -238,22 +221,8 @@
         @yield('content')
     </main>
 
-    <!-- ════════ FOOTER ════════ -->
-    {{-- <footer class="border-t border-gray-100 bg-white mt-auto">
-        <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-gray-100 text-gray-500 text-xs font-bold">M</span>
-                    <p class="text-sm text-gray-500">&copy; {{ date('Y') }} {{ config('app.name', 'Majoo') }}.</p>
-                </div>
-                <p class="text-xs text-gray-400 leading-relaxed">Halaman shop sederhana &mdash; Blade + Tailwind CSS.</p>
-            </div>
-        </div>
-    </footer> --}}
-
-    <!-- ════════ SCRIPTS ════════ -->
     <script>
-        // Header shadow on scroll
+
         const header = document.querySelector('.site-header');
         let ticking = false;
         window.addEventListener('scroll', () => {
@@ -266,7 +235,6 @@
             }
         }, { passive: true });
 
-        // Auto-dismiss flash messages
         document.querySelectorAll('[data-auto-dismiss]').forEach(el => {
             setTimeout(() => {
                 if (el.parentElement) {
