@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -115,6 +118,100 @@ class CartController extends Controller
         return redirect()
             ->route('shop.cart')
             ->with('success', 'Keranjang dikosongkan.');
+    }
+
+    public function checkout(Request $request)
+    {
+        $cart = session()->get('cart', []);
+        if (empty($cart)) {
+            return redirect()
+                ->route('shop.cart')
+                ->with('error', 'Keranjang kosong. Tambahkan produk terlebih dahulu.');
+        }
+
+        try {
+            $order = DB::transaction(function () use ($cart) {
+                $productIds = collect($cart)->pluck('id')->map(fn ($id) => (int) $id)->all();
+                $products = Product::query()
+                    ->whereIn('id', $productIds)
+                    ->where('is_available', true)
+                    ->lockForUpdate()
+                    ->get()
+                    ->keyBy('id');
+
+                $lines = [];
+                $total = 0;
+
+                foreach ($cart as $row) {
+                    $id = (int) $row['id'];
+                    $qty = (int) $row['qty'];
+                    $product = $products->get($id);
+
+                    if (!$product || $qty < 1) {
+                        throw new \RuntimeException('Beberapa produk tidak lagi tersedia. Perbarui keranjang.');
+                    }
+
+                    if ($qty > (int) $product->stock) {
+                        throw new \RuntimeException(
+                            "Stok tidak cukup untuk \"{$product->name}\". Stok tersedia: {$product->stock}."
+                        );
+                    }
+
+                    $unitPrice = (int) $product->price;
+                    $subtotal = $unitPrice * $qty;
+                    $total += $subtotal;
+
+                    $lines[] = [
+                        'product' => $product,
+                        'qty' => $qty,
+                        'unit_price' => $unitPrice,
+                        'subtotal' => $subtotal,
+                    ];
+                }
+
+                $order = Order::query()->create([
+                    'order_number' => null,
+                    'total' => $total,
+                    'status' => 'pending',
+                ]);
+
+                $order->order_number = 'ORD-'.str_pad((string) $order->id, 6, '0', STR_PAD_LEFT);
+                $order->save();
+
+                foreach ($lines as $line) {
+                    $product = $line['product'];
+                    OrderItem::query()->create([
+                        'order_id' => $order->id,
+                        'product_id' => $product->id,
+                        'product_name' => $product->name,
+                        'sku' => $product->sku,
+                        'unit_price' => $line['unit_price'],
+                        'qty' => $line['qty'],
+                        'subtotal' => $line['subtotal'],
+                    ]);
+
+                    $product->decrement('stock', $line['qty']);
+                }
+
+                return $order->fresh(['items']);
+            });
+        } catch (\RuntimeException $e) {
+            return redirect()
+                ->route('shop.cart')
+                ->with('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            report($e);
+
+            return redirect()
+                ->route('shop.cart')
+                ->with('error', 'Checkout gagal. Silakan coba lagi atau hubungi admin.');
+        }
+
+        session()->forget('cart');
+
+        return redirect()
+            ->route('shop.cart')
+            ->with('success', 'Pesanan berhasil dibuat. Nomor order: '.$order->order_number.'. Tim admin akan memproses pesanan Anda.');
     }
 }
 

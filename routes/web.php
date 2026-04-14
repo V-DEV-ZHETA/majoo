@@ -16,3 +16,4 @@ Route::post('/shop/cart/add/{product}', [CartController::class, 'add'])->name('s
 Route::post('/shop/cart/update', [CartController::class, 'update'])->name('shop.cart.update');
 Route::post('/shop/cart/remove/{product}', [CartController::class, 'remove'])->name('shop.cart.remove');
 Route::post('/shop/cart/clear', [CartController::class, 'clear'])->name('shop.cart.clear');
+Route::post('/shop/cart/checkout', [CartController::class, 'checkout'])->name('shop.cart.checkout');

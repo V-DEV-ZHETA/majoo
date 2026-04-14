@@ -32,6 +32,11 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'polaris-product-cost-icon';
 
+    public static function getNavigationBadge(): ?string
+{
+    return static::getModel()::count();
+}
+
     protected static ?string $navigationLabel = 'Kelola Produk';
 
     public static function form(Form $form): Form
@@ -113,8 +118,7 @@ class ProductResource extends Resource
                     ->searchable()
                     ->label('Nama Produk')
                     ->sortable()
-                    ->description(fn (Product $record) => $record->description ? substr($record->description, 0, 50) . '...' : '')
-                    ->weight(Icons::class),
+                    ->description(fn (Product $record) => $record->description ? substr($record->description, 0, 50) . '...' : ''),
                 TextColumn::make('sku')
                     ->copyable()
                     ->label('SKU')
